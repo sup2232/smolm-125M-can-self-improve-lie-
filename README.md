@@ -396,73 +396,8 @@ bibtex
 License
 MIT
 
-text
-
----
-
-## PART 3 — WHAT TO DO NOW
-
-### Step 1 — Create the repository on GitHub
-
-1. Go to github.com/new
-2. Name: `capacity-threshold-self-improvement`
-3. Description: *"An empirical study of weight-level self-improvement in 135M-parameter language models"*
-4. Public
-5. MIT License
-
-### Step 2 — Push the files
-
-```bash
-cd /path/to/repo
-git init
-git add .
-git commit -m "Initial commit: capacity threshold study"
-git branch -M main
-git remote add origin https://github.com/[your-user]/capacity-threshold-self-improvement.git
-git push -u origin main
-Step 3 — Publish on arXiv
-Go to arxiv.org
-
-Click "Submit"
-
-Choose cs.LG (Machine Learning)
-
-Paste paper.md converted to LaTeX (or submit the PDF)
-
-Fill metadata (title, abstract, authors)
-
-Submit
-
-Note: arXiv requires endorsement for the first paper in cs.LG. If you don't have it, try cs.CL (Computation and Language) or publish as a preprint on GitHub + blog.
-
-Step 4 — Share
-Twitter/X: thread with the main results
-
-Reddit: r/MachineLearning
-
-Hacker News: link to the GitHub
-
-LessWrong: if you want more technical discussion
-
-Personal blog: post with the TL;DR
-
-What you have (and it is enough)
-Component	Status
-Code	✅ w2/, w3/, experiments/
-Verifier	✅ Validated (40/40)
-Loop	✅ Implemented
-Sweeps	✅ 3 sweeps, 3 seeds each
-Results	✅ Documented
-Analysis	✅ ANALISE.md (22 sections)
-Falsifiable prediction	✅ For 4B+
-Negative results	✅ Documented
-What's missing:
-
 Format paper.md
 
-Push the repo
-
-Publish on arXiv (if you want)
 
 Summary
 What	Where
@@ -474,11 +409,6 @@ Analysis	docs/ANALISE.md
 License	MIT
 arXiv	cs.LG or cs.CL
 The paper is short (8-10 pages). The code is already written. The analysis is already done.
-
-You have enough to publish. What's left is formatting and pushing.
-
-Yes. This is the publishable result. And it changes the paper.
-The agent is right. The three sweeps are confirmations of what the literature already suspects. What just happened is new.
 
 What just happened
 The guard — headroom(discovery, accuracy, min_gap=0.02) — approved training because discovery > accuracy + 0.02. But the dense reward can rise entirely from partial credit on tasks the model already half-solves. No new task needs to be solved for the gap to open.
@@ -583,60 +513,8 @@ A warning when the guard approves with sampled_new_exact == 0
 The guard uses sampled_new_exact > 0 as the primary gate, discovery > accuracy + 0.02 as the secondary
 
 What the agent got right (and you should credit)
-The agent wrote:
 
 "The most publishable item is not any of the three sweeps — it is what just happened: a headroom guard based on dense reward approves training that degrades the model, because the dense gap can open entirely from partial credit without any new task closing. This is a decision-metric failure, not a model failure. It is general (applies to any RFT/STaR loop with dense reward and binary curator threshold), cheap to detect (sampled_new_exact), and I have not seen it in any of the papers I have read."
 
 That is the contribution. The three sweeps are confirmations. The metric failure is new.
 
-And it only exists because you ran the smoke test and the per-task log was there. The agent's own words. Credit that in the paper.
-
-What to do now
-1. Run the triage
-bash
-python w3/triage_tasks.py --base HuggingFaceTB/SmolLM2-135M-Instruct --skill w2/tasks.json --out runs/triage
-~30–45 min. It classifies each of the 40 tasks into HEADROOM / PARCIAL / RESOLVIDO / SEM_SINAL and writes tasks_trainable.json with only the HEADROOM tasks.
-
-If HEADROOM is zero: the 135M has no task in the band. The paper reports this as the boundary of the capacity threshold.
-
-If HEADROOM is non-zero: run the loop on tasks_trainable.json with sampled_new_exact gating.
-
-2. Update the paper with the metric failure as the primary result
-The abstract, contributions, and structure change. The capacity threshold becomes the second result.
-
-3. Push the repo
-w2/ — verifier + tasks
-
-w3/ — loop + train_skill + triage_tasks
-
-experiments/ — the three sweeps + logs
-
-docs/ANALISE.md — the full analysis
-
-docs/METRIC_FAILURE.md — the new primary result
-
-paper/paper.md — updated abstract, structure, contributions
-
-4. Publish
-arXiv (cs.LG or cs.CL)
-
-GitHub with README updated to lead with the metric failure
-
-Short blog post on the metric failure — it is the piece that generalizes
-
-The honest conclusion
-You started with a hypothesis: "small models can self-improve if you give them the right data and architecture, and nobody has tried."
-
-You ended with:
-
-A metric failure in dense-reward self-improvement loops, general and cheap to fix.
-
-A capacity threshold for weight self-improvement, measured in 135M.
-
-A falsifiable prediction for 4B+.
-
-A set of negative results (repair does not replicate, blend attenuates but does not create, volume beats format).
-
-The first one is new. The other three are useful confirmations. The paper leads with the first.
-
-Run the triage. Update the paper. Publish.
